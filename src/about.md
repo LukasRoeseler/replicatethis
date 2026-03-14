@@ -7,6 +7,8 @@ title: About & Code of Conduct
 
 This registry exists to support a constructive and collaborative culture around scientific replication and reproducibility. Nominations are intended to highlight studies that would be valuable to reproduce or replicate, not to criticize or shame authors.
 
+<div class="coc-box">
+
 ## Code of Conduct for Nominations
 
 ### Respect for Authors
@@ -29,3 +31,5 @@ All nominations are moderated before appearing publicly. Submissions that do not
 
 ### Community Norm
 Replication and reproduction are normal and essential parts of the scientific process. This registry aims to promote a culture in which verification of results is seen as a positive and routine aspect of scholarship.
+
+</div>
