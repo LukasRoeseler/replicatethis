@@ -6,7 +6,8 @@ pagination:
   alias: nom
 permalink: "nomination/{{ nom.id }}/"
 ---
-<a href="/browse/" class="back-link">&larr; Back to Browse</a>
+<!-- Notice the updated back-link below -->
+<a href="{{ '/browse/' | url }}" class="back-link">&larr; Back to Browse</a>
 
 <h1>{{ nom.title }}</h1>
 <div class="meta-box">
