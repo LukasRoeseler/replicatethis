@@ -1,9 +1,11 @@
-
 name: Nominate a Paper
 description: Nominate a published research paper for replication or reproduction.
 title: "[Nomination]: "
 labels: ["status: pending"]
 body:
+  - type: markdown
+    attributes:
+      value: "🚨 **Important Note:** All posters must respect the Code of Conduct or their nomination will not be approved. [Please read the Code of Conduct here](https://lukasroeseler.github.io/replicatethis/about/)."
   - type: input
     id: doi
     attributes:
@@ -47,7 +49,7 @@ body:
     id: justification
     attributes:
       label: Scientific Justification
-      description: Why is this paper valuable to replicate/reproduce? (e.g., highly influential, surprising results, methodologically innovative). Must adhere to the Code of Conduct.
+      description: Why is this paper valuable to replicate/reproduce? (e.g., highly influential, surprising results, methodologically innovative).
     validations:
       required: true
   - type: textarea
