@@ -8,7 +8,8 @@ title: Browse Nominations
 <div class="nomination-list">
   {% for nom in nominations | reverse %}
   <div class="card">
-    <h2><a href="/nomination/{{ nom.id }}/">{{ nom.title }}</a></h2>
+    <!-- Notice the updated href using the URL filter below -->
+    <h2><a href="{{ '/nomination/' | url }}{{ nom.id }}/">{{ nom.title }}</a></h2>
     <p><strong>Authors:</strong> {{ nom.authors }}</p>
     <p><strong>Journal:</strong> {{ nom.Journal }} | <strong>Discipline:</strong> {{ nom.Discipline }}</p>
     <div class="tags">
