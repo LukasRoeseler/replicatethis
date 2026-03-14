@@ -3,68 +3,87 @@ layout: base.njk
 title: Nominations Registry
 ---
 <h1 style="margin-bottom: 5px;">Nominations Registry</h1>
-<p style="font-size: 1.1rem; color: #555; margin-bottom: 30px;">
+<p style="font-size: 1.1rem; color: #555; margin-bottom: 20px;">
   A curated collection of distinguished research papers recognized by the community as highly valuable for replication or reproduction.
 </p>
 
 <div class="registry-controls">
+  <input type="text" id="searchInput" placeholder="Search by paper, journal, author..." class="search-bar">
   <div>
-    <label for="typeFilter" style="font-weight: 500;">Filter by Type: </label>
-    <select id="typeFilter" style="padding: 6px; border-radius: 4px; border: 1px solid #ccc;">
+    <select id="typeFilter" class="filter-dropdown">
       <option value="all">All Nominations</option>
       <option value="Replication">Replication</option>
       <option value="Reproduction">Reproduction</option>
     </select>
   </div>
-  <p style="font-size: 0.85rem; color: #777;"><em>Click table headers to sort</em></p>
+</div>
+<p style="font-size: 0.85rem; color: #777; margin-bottom: 15px;"><em>Click table headers to sort</em></p>
+
+<div class="table-responsive">
+  <table class="academic-table" id="registryTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)" style="width: 120px;">Date &#x21D5;</th>
+        <th onclick="sortTable(1)">Nominated Work &#x21D5;</th>
+        <th onclick="sortTable(2)">Type &#x21D5;</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for nom in nominations %}
+      <tr class="main-row" data-type="{{ nom.type }}">
+        <td data-sort="{{ nom.date }}">{{ nom.formattedDate }}</td>
+        <td>
+          <strong style="font-size: 1.05rem;">
+            <a href="{{ '/nomination/' | url }}{{ nom.id }}/">{{ nom.title }}</a>
+          </strong>
+          {% if nom.isClaimed %}
+            <span class="type-badge type-claimed" style="margin-left: 5px;">CLAIMED ✍️</span>
+          {% endif %}
+          <br>
+          <span style="font-size: 0.85rem; color: var(--text-muted, #555);">{{ nom.Journal }} | {{ nom.Discipline }}</span>
+        </td>
+        <td>
+          <span class="type-badge type-{{ nom.type | lower }}">{{ nom.type }}</span>
+        </td>
+        <td>
+          <a href="{{ '/nomination/' | url }}{{ nom.id }}/#comments" class="comment-icon" style="text-decoration: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            {{ nom.commentCount }}
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" style="text-align: center; padding: 30px;">
+          <em>No approved nominations found yet. Check back soon or submit one!</em>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
-<table class="academic-table" id="registryTable">
-  <thead>
-    <tr>
-      <th onclick="sortTable(0)" style="width: 120px;">Date &#x21D5;</th>
-      <th onclick="sortTable(1)">Nominated Work &#x21D5;</th>
-      <th onclick="sortTable(2)">Type &#x21D5;</th>
-      <th>Comments</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for nom in nominations %}
-    <tr class="main-row" data-type="{{ nom.type }}">
-      <td data-sort="{{ nom.date }}">{{ nom.formattedDate }}</td>
-      <td>
-        <strong style="font-size: 1.05rem;"><a href="{{ '/nomination/' | url }}{{ nom.id }}/">{{ nom.title }}</a></strong><br>
-        <span style="font-size: 0.85rem; color: #555;">{{ nom.Journal }} | {{ nom.Discipline }}</span>
-      </td>
-      <td>
-        <span class="type-badge type-{{ nom.type | lower }}">{{ nom.type }}</span>
-      </td>
-      <td>
-        <a href="{{ '/nomination/' | url }}{{ nom.id }}/#comments" class="comment-icon" style="text-decoration: none;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-          {{ nom.commentCount }}
-        </a>
-      </td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="4" style="text-align: center; padding: 30px;">
-        <em>No approved nominations found yet. Check back soon or submit one!</em>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
 <script>
-document.getElementById('typeFilter').addEventListener('change', function(e) {
-  const filterVal = e.target.value;
-  const rows = document.querySelectorAll('.main-row');
-  rows.forEach(row => {
-    row.style.display = (filterVal === 'all' || row.getAttribute('data-type') === filterVal) ? '' : 'none';
-  });
-});
+// Filter by Type
+document.getElementById('typeFilter').addEventListener('change', runFilters);
+// Filter by Search
+document.getElementById('searchInput').addEventListener('keyup', runFilters);
 
+function runFilters() {
+  const typeVal = document.getElementById('typeFilter').value;
+  const searchVal = document.getElementById('searchInput').value.toLowerCase();
+  const rows = document.querySelectorAll('.main-row');
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    const typeMatch = (typeVal === 'all' || row.getAttribute('data-type') === typeVal);
+    const searchMatch = text.includes(searchVal);
+    row.style.display = (typeMatch && searchMatch) ? '' : 'none';
+  });
+}
+
+// Table Sorting
 let sortAsc = true;
 function sortTable(colIndex) {
   const tbody = document.querySelector("#registryTable tbody");
