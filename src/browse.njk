@@ -1,8 +1,8 @@
 ---
 layout: base.njk
-title: Nominated Papers Registry
+title: Nominations Registry
 ---
-<h1 style="margin-bottom: 5px;">Honored Nominations Registry</h1>
+<h1 style="margin-bottom: 5px;">Nominations Registry</h1>
 <p style="font-size: 1.1rem; color: #555; margin-bottom: 30px;">
   A curated collection of distinguished research papers recognized by the community as highly valuable for replication or reproduction.
 </p>
@@ -25,7 +25,7 @@ title: Nominated Papers Registry
       <th onclick="sortTable(0)" style="width: 120px;">Date &#x21D5;</th>
       <th onclick="sortTable(1)">Nominated Work &#x21D5;</th>
       <th onclick="sortTable(2)">Type &#x21D5;</th>
-      <th>Discussion</th>
+      <th>Comments</th>
     </tr>
   </thead>
   <tbody>
@@ -40,29 +40,10 @@ title: Nominated Papers Registry
         <span class="type-badge type-{{ nom.type | lower }}">{{ nom.type }}</span>
       </td>
       <td>
-        <div class="comment-icon" onclick="toggleDiscussion({{ nom.id }})">
+        <a href="{{ '/nomination/' | url }}{{ nom.id }}/#comments" class="comment-icon" style="text-decoration: none;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           {{ nom.commentCount }}
-        </div>
-      </td>
-    </tr>
-    <!-- Hidden Discussion Row -->
-    <tr class="discussion-row" id="disc-{{ nom.id }}">
-      <td colspan="4">
-        <div class="discussion-content">
-          <h4 style="margin-top: 0;">Community Discussion</h4>
-          {% if nom.commentCount == 0 %}
-            <p style="color: #666;">No comments yet on this nomination.</p>
-          {% else %}
-            {% for comment in nom.discussion %}
-              <div class="comment-box">
-                <strong>{{ comment.author }}</strong> <span style="color: #888; font-size: 0.8rem;">({{ comment.date }})</span>
-                <div style="margin-top: 5px; font-size: 0.95rem;">{{ comment.body | safe }}</div>
-              </div>
-            {% endfor %}
-          {% endif %}
-          <a href="{{ nom.url }}" target="_blank" class="join-btn">Join discussion on GitHub &rarr;</a>
-        </div>
+        </a>
       </td>
     </tr>
     {% else %}
@@ -76,55 +57,32 @@ title: Nominated Papers Registry
 </table>
 
 <script>
-// Filter by Type logic
 document.getElementById('typeFilter').addEventListener('change', function(e) {
   const filterVal = e.target.value;
   const rows = document.querySelectorAll('.main-row');
   rows.forEach(row => {
-    const isMatch = filterVal === 'all' || row.getAttribute('data-type') === filterVal;
-    row.style.display = isMatch ? '' : 'none';
-    
-    // Hide open discussion row if parent is hidden
-    const discRow = row.nextElementSibling;
-    if (!isMatch) discRow.classList.remove('active');
+    row.style.display = (filterVal === 'all' || row.getAttribute('data-type') === filterVal) ? '' : 'none';
   });
 });
 
-// Accordion Logic
-function toggleDiscussion(id) {
-  const row = document.getElementById('disc-' + id);
-  row.classList.toggle('active');
-}
-
-// Table Sorting Logic
 let sortAsc = true;
 function sortTable(colIndex) {
   const tbody = document.querySelector("#registryTable tbody");
-  // Get all row pairs (main row + discussion row)
   const rowsArray = Array.from(tbody.querySelectorAll('.main-row'));
   
   rowsArray.sort((a, b) => {
     let valA = a.cells[colIndex].innerText.trim();
     let valB = b.cells[colIndex].innerText.trim();
-    
-    // Use hidden data-sort attribute for accurate date sorting
     if (colIndex === 0) {
       valA = a.cells[colIndex].getAttribute('data-sort');
       valB = b.cells[colIndex].getAttribute('data-sort');
     }
-
     if (valA < valB) return sortAsc ? -1 : 1;
     if (valA > valB) return sortAsc ? 1 : -1;
     return 0;
   });
 
   sortAsc = !sortAsc;
-
-  // Re-attach sorted rows and their corresponding discussion rows
-  rowsArray.forEach(row => {
-    const discRow = document.getElementById('disc-' + row.id.replace('disc-', '') || row.nextElementSibling.id);
-    tbody.appendChild(row);
-    tbody.appendChild(discRow);
-  });
+  rowsArray.forEach(row => tbody.appendChild(row));
 }
 </script>
