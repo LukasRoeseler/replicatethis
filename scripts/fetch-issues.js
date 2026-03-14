@@ -14,6 +14,10 @@ async function fetchIssues() {
     const res = await fetch(url, { headers });
     const issues = await res.json();
     const nominations = [];
+    
+    // Track counts for leaderboards
+    const rawJournals = {};
+    const rawDisciplines = {};
 
     for (const issue of issues) {
       if (issue.pull_request) continue;
@@ -37,6 +41,10 @@ async function fetchIssues() {
         }));
       }
 
+      // Add to leaderboard counts
+      if (parsed.Journal) rawJournals[parsed.Journal] = (rawJournals[parsed.Journal] || 0) + 1;
+      if (parsed.Discipline) rawDisciplines[parsed.Discipline] = (rawDisciplines[parsed.Discipline] || 0) + 1;
+
       nominations.push({
         id: issue.number,
         title: issue.title.replace('[Nomination]: ', ''),
@@ -44,7 +52,7 @@ async function fetchIssues() {
         date: issue.created_at,
         formattedDate: new Date(issue.created_at).toLocaleDateString(),
         type: repType,
-        nominator: issue.user.login, // Added nominator
+        nominator: issue.user.login,
         commentCount: issue.comments,
         discussion: discussion,
         ...parsed,
@@ -52,10 +60,23 @@ async function fetchIssues() {
       });
     }
 
+    // Sort leaderboards highest to lowest
+    const sortLeaderboard = (obj) => Object.entries(obj)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+
+    const leaderboards = {
+      journals: sortLeaderboard(rawJournals),
+      disciplines: sortLeaderboard(rawDisciplines)
+    };
+
     const dataDir = path.join(__dirname, '../src/_data');
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    
     fs.writeFileSync(path.join(dataDir, 'nominations.json'), JSON.stringify(nominations, null, 2));
-    console.log(`Saved ${nominations.length} nominations.`);
+    fs.writeFileSync(path.join(dataDir, 'leaderboards.json'), JSON.stringify(leaderboards, null, 2));
+    
+    console.log(`Saved ${nominations.length} nominations and generated leaderboards.`);
   } catch (error) {
     console.error("Error fetching issues:", error);
   }
