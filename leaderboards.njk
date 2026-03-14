@@ -1,1 +1,34 @@
+---
+layout: base.njk
+title: Leaderboards
+---
+<h1>Leaderboards</h1>
 
+<div class="grid">
+  <div class="card">
+    <h3>Most Nominated Disciplines</h3>
+    <ul>
+      {% for discipline, count in leaderboards.disciplines %}
+        <li><strong>{{ discipline }}:</strong> {{ count }} nominations</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Most Nominated Journals</h3>
+    <ul>
+      {% for journal, count in leaderboards.journals %}
+        <li><strong>{{ journal }}:</strong> {{ count }} nominations</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<h2>Most Nominated Papers (By DOI)</h2>
+<div class="card">
+  <ul>
+    {% for doi, data in leaderboards.papers %}
+      <li><strong>{{ data.title }}</strong> ({{ doi }}) - <em>{{ data.count }} requests</em></li>
+    {% endfor %}
+  </ul>
+</div>
