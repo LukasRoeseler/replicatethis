@@ -3,38 +3,98 @@ layout: base.njk
 title: Leaderboards
 ---
 <h1 style="margin-bottom: 5px;">Leaderboards</h1>
-<p style="font-size: 1.1rem; color: #555; margin-bottom: 30px;">
-  Disciplines and journals with the most approved nominations.
+<p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 20px;">
+  See where the most interest lies across disciplines, journals, and top nominators.
 </p>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+<!-- Filter Controls -->
+<div style="margin-bottom: 30px; display: flex; gap: 15px; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+  <button class="nav-submit" style="background: var(--link); color: white;" id="btn-all" onclick="switchBoard('all')">All Nominations</button>
+  <button class="nav-submit" style="background: transparent; color: var(--text) !important; border-color: var(--border);" id="btn-rep" onclick="switchBoard('replication')">Replications Only</button>
+  <button class="nav-submit" style="background: transparent; color: var(--text) !important; border-color: var(--border);" id="btn-repro" onclick="switchBoard('reproduction')">Reproductions Only</button>
+</div>
+
+<!-- Nunjucks Macro to generate a section -->
+{% macro boardSection(dataObj, idName, displayStyle) %}
+<div id="{{ idName }}" style="display: {{ displayStyle }}; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
   
-  <div style="background: white; border: 1px solid var(--border); padding: 25px; border-radius: 8px;">
-    <h3 class="serif" style="margin-top: 0; border-bottom: 2px solid var(--border); padding-bottom: 10px;">Most Nominated Disciplines</h3>
+  <!-- Disciplines -->
+  <div style="background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 8px;">
+    <h3 class="serif" style="margin-top: 0; border-bottom: 2px solid var(--border); padding-bottom: 10px;">Disciplines</h3>
     <ul style="line-height: 1.8; list-style-type: none; padding-left: 0;">
-      {% for item in leaderboards.disciplines %}
-        <li style="display: flex; justify-content: space-between; border-bottom: 1px solid #f0f0f0; padding: 5px 0;">
-          <strong>{{ item.name }}</strong> 
-          <span style="color: var(--link); font-weight: 600;">{{ item.count }}</span>
+      {% for item in dataObj.disciplines.slice(0, 10) %}
+        <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 5px 0;">
+          <strong>{{ item.name }}</strong> <span style="color: var(--link); font-weight: 600;">{{ item.count }}</span>
         </li>
       {% else %}
-        <li style="color: #666;">No discipline data available yet.</li>
+        <li style="color: var(--text-muted);">No data yet.</li>
       {% endfor %}
     </ul>
   </div>
 
-  <div style="background: white; border: 1px solid var(--border); padding: 25px; border-radius: 8px;">
-    <h3 class="serif" style="margin-top: 0; border-bottom: 2px solid var(--border); padding-bottom: 10px;">Most Nominated Journals</h3>
+  <!-- Journals -->
+  <div style="background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 8px;">
+    <h3 class="serif" style="margin-top: 0; border-bottom: 2px solid var(--border); padding-bottom: 10px;">Journals</h3>
     <ul style="line-height: 1.8; list-style-type: none; padding-left: 0;">
-      {% for item in leaderboards.journals %}
-        <li style="display: flex; justify-content: space-between; border-bottom: 1px solid #f0f0f0; padding: 5px 0;">
-          <strong>{{ item.name }}</strong> 
+      {% for item in dataObj.journals.slice(0, 10) %}
+        <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 5px 0;">
+          <strong>{{ item.name }}</strong> <span style="color: var(--link); font-weight: 600;">{{ item.count }}</span>
+        </li>
+      {% else %}
+        <li style="color: var(--text-muted);">No data yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Top Nominators -->
+  <div style="background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 8px;">
+    <h3 class="serif" style="margin-top: 0; border-bottom: 2px solid var(--border); padding-bottom: 10px;">Top Nominators</h3>
+    <ul style="line-height: 1.8; list-style-type: none; padding-left: 0;">
+      {% for item in dataObj.nominators.slice(0, 10) %}
+        <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 5px 0;">
+          <a href="https://github.com/{{ item.name }}" target="_blank">@{{ item.name }}</a>
           <span style="color: var(--link); font-weight: 600;">{{ item.count }}</span>
         </li>
       {% else %}
-        <li style="color: #666;">No journal data available yet.</li>
+        <li style="color: var(--text-muted);">No data yet.</li>
       {% endfor %}
     </ul>
   </div>
 
 </div>
+{% endmacro %}
+
+{{ boardSection(leaderboards.all, 'board-all', 'grid') }}
+{{ boardSection(leaderboards.replication, 'board-rep', 'none') }}
+{{ boardSection(leaderboards.reproduction, 'board-repro', 'none') }}
+
+<script>
+function switchBoard(type) {
+  // Hide all
+  document.getElementById('board-all').style.display = 'none';
+  document.getElementById('board-rep').style.display = 'none';
+  document.getElementById('board-repro').style.display = 'none';
+  
+  // Reset buttons
+  const btns = [document.getElementById('btn-all'), document.getElementById('btn-rep'), document.getElementById('btn-repro')];
+  btns.forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = 'var(--text)';
+  });
+
+  // Show active
+  if(type === 'all') {
+    document.getElementById('board-all').style.display = 'grid';
+    document.getElementById('btn-all').style.background = 'var(--link)';
+    document.getElementById('btn-all').style.color = 'white';
+  } else if(type === 'replication') {
+    document.getElementById('board-rep').style.display = 'grid';
+    document.getElementById('btn-rep').style.background = 'var(--link)';
+    document.getElementById('btn-rep').style.color = 'white';
+  } else if(type === 'reproduction') {
+    document.getElementById('board-repro').style.display = 'grid';
+    document.getElementById('btn-repro').style.background = 'var(--link)';
+    document.getElementById('btn-repro').style.color = 'white';
+  }
+}
+</script>
