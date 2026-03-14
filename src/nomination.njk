@@ -9,7 +9,8 @@ permalink: "nomination/{{ nom.id }}/"
 <a href="{{ '/browse/' | url }}" class="back-link" style="display:inline-block; margin-bottom: 20px;">&larr; Back to Browse</a>
 
 <h1 style="margin-top: 0;">{{ nom.title }}</h1>
-<div class="meta-box" style="background: white; border-top: 3px solid var(--accent);">
+<!-- Removed the inline white background so it uses var(--card-bg) -->
+<div class="meta-box" style="border-top: 3px solid var(--accent);">
   <p><strong>Nominated by:</strong> <a href="https://github.com/{{ nom.nominator }}" target="_blank">@{{ nom.nominator }}</a></p>
   <p><strong>DOI:</strong> <a href="https://doi.org/{{ nom.DOI }}" target="_blank">{{ nom.DOI }}</a></p>
   <p><strong>Journal:</strong> {{ nom.Journal }}</p>
@@ -40,17 +41,12 @@ permalink: "nomination/{{ nom.id }}/"
 <h2 id="comments" class="serif">Comments</h2>
 
 {% if nom.commentCount == 0 %}
-  <p style="color: #666; margin-bottom: 20px;">No comments yet on this nomination.</p>
+  <p style="color: var(--text-muted); margin-bottom: 20px;">No comments yet on this nomination.</p>
 {% else %}
   <div style="margin-bottom: 20px;">
     {% for comment in nom.discussion %}
-      <div style="background: white; padding: 20px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 15px;">
+      <!-- Updated background here to var(--card-bg) for dark mode compatibility -->
+      <div style="background: var(--card-bg); padding: 20px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 15px;">
         <strong style="color: var(--link);">@{{ comment.author }}</strong> 
-        <span style="color: #888; font-size: 0.85rem; margin-left: 10px;">{{ comment.date }}</span>
-        <div style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">{{ comment.body }}</div>
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
-
-<a href="{{ nom.url }}" target="_blank" class="nav-submit" style="display: inline-block; font-size: 1rem;">Join discussion on GitHub &rarr;</a>
+        <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: 10px;">{{ comment.date }}</span>
+        <div style="margin-top: 10px; font-size: 0.95rem; line
