@@ -1,22 +1,130 @@
 ---
 layout: base.njk
-title: Browse Nominations
+title: Nominated Papers Registry
 ---
-<h1>Browse Nominations</h1>
-<p>All approved papers requested for replication or reproduction.</p>
+<h1 style="margin-bottom: 5px;">Honored Nominations Registry</h1>
+<p style="font-size: 1.1rem; color: #555; margin-bottom: 30px;">
+  A curated collection of distinguished research papers recognized by the community as highly valuable for replication or reproduction.
+</p>
 
-<div class="nomination-list">
-  {% for nom in nominations | reverse %}
-  <div class="card">
-    <!-- Notice the updated href using the URL filter below -->
-    <h2><a href="{{ '/nomination/' | url }}{{ nom.id }}/">{{ nom.title }}</a></h2>
-    <p><strong>Authors:</strong> {{ nom.authors }}</p>
-    <p><strong>Journal:</strong> {{ nom.Journal }} | <strong>Discipline:</strong> {{ nom.Discipline }}</p>
-    <div class="tags">
-      {% for label in nom.labels %}
-        <span class="badge {{ label | replace(':', '') | replace(' ', '-') }}">{{ label }}</span>
-      {% endfor %}
-    </div>
+<div class="registry-controls">
+  <div>
+    <label for="typeFilter" style="font-weight: 500;">Filter by Type: </label>
+    <select id="typeFilter" style="padding: 6px; border-radius: 4px; border: 1px solid #ccc;">
+      <option value="all">All Nominations</option>
+      <option value="Replication">Replication</option>
+      <option value="Reproduction">Reproduction</option>
+    </select>
   </div>
-  {% endfor %}
+  <p style="font-size: 0.85rem; color: #777;"><em>Click table headers to sort</em></p>
 </div>
+
+<table class="academic-table" id="registryTable">
+  <thead>
+    <tr>
+      <th onclick="sortTable(0)" style="width: 120px;">Date &#x21D5;</th>
+      <th onclick="sortTable(1)">Nominated Work &#x21D5;</th>
+      <th onclick="sortTable(2)">Type &#x21D5;</th>
+      <th>Discussion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for nom in nominations %}
+    <tr class="main-row" data-type="{{ nom.type }}">
+      <td data-sort="{{ nom.date }}">{{ nom.formattedDate }}</td>
+      <td>
+        <strong style="font-size: 1.05rem;"><a href="{{ '/nomination/' | url }}{{ nom.id }}/">{{ nom.title }}</a></strong><br>
+        <span style="font-size: 0.85rem; color: #555;">{{ nom.Journal }} | {{ nom.Discipline }}</span>
+      </td>
+      <td>
+        <span class="type-badge type-{{ nom.type | lower }}">{{ nom.type }}</span>
+      </td>
+      <td>
+        <div class="comment-icon" onclick="toggleDiscussion({{ nom.id }})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          {{ nom.commentCount }}
+        </div>
+      </td>
+    </tr>
+    <!-- Hidden Discussion Row -->
+    <tr class="discussion-row" id="disc-{{ nom.id }}">
+      <td colspan="4">
+        <div class="discussion-content">
+          <h4 style="margin-top: 0;">Community Discussion</h4>
+          {% if nom.commentCount == 0 %}
+            <p style="color: #666;">No comments yet on this nomination.</p>
+          {% else %}
+            {% for comment in nom.discussion %}
+              <div class="comment-box">
+                <strong>{{ comment.author }}</strong> <span style="color: #888; font-size: 0.8rem;">({{ comment.date }})</span>
+                <div style="margin-top: 5px; font-size: 0.95rem;">{{ comment.body | safe }}</div>
+              </div>
+            {% endfor %}
+          {% endif %}
+          <a href="{{ nom.url }}" target="_blank" class="join-btn">Join discussion on GitHub &rarr;</a>
+        </div>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="4" style="text-align: center; padding: 30px;">
+        <em>No approved nominations found yet. Check back soon or submit one!</em>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+// Filter by Type logic
+document.getElementById('typeFilter').addEventListener('change', function(e) {
+  const filterVal = e.target.value;
+  const rows = document.querySelectorAll('.main-row');
+  rows.forEach(row => {
+    const isMatch = filterVal === 'all' || row.getAttribute('data-type') === filterVal;
+    row.style.display = isMatch ? '' : 'none';
+    
+    // Hide open discussion row if parent is hidden
+    const discRow = row.nextElementSibling;
+    if (!isMatch) discRow.classList.remove('active');
+  });
+});
+
+// Accordion Logic
+function toggleDiscussion(id) {
+  const row = document.getElementById('disc-' + id);
+  row.classList.toggle('active');
+}
+
+// Table Sorting Logic
+let sortAsc = true;
+function sortTable(colIndex) {
+  const tbody = document.querySelector("#registryTable tbody");
+  // Get all row pairs (main row + discussion row)
+  const rowsArray = Array.from(tbody.querySelectorAll('.main-row'));
+  
+  rowsArray.sort((a, b) => {
+    let valA = a.cells[colIndex].innerText.trim();
+    let valB = b.cells[colIndex].innerText.trim();
+    
+    // Use hidden data-sort attribute for accurate date sorting
+    if (colIndex === 0) {
+      valA = a.cells[colIndex].getAttribute('data-sort');
+      valB = b.cells[colIndex].getAttribute('data-sort');
+    }
+
+    if (valA < valB) return sortAsc ? -1 : 1;
+    if (valA > valB) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  sortAsc = !sortAsc;
+
+  // Re-attach sorted rows and their corresponding discussion rows
+  rowsArray.forEach(row => {
+    const discRow = document.getElementById('disc-' + row.id.replace('disc-', '') || row.nextElementSibling.id);
+    tbody.appendChild(row);
+    tbody.appendChild(discRow);
+  });
+}
+</script>
