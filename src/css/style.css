@@ -21,24 +21,17 @@ h1, h2, h3, .serif {
   color: #173626;
 }
 
-/* Light green full-bleed top section */
-.top-background {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 280px;
-  background-color: var(--header-bg);
-  z-index: -1;
-  border-bottom: 1px solid var(--border);
-}
-
 .container {
   max-width: 960px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
+/* Green background is now applied ONLY to the header block itself */
 header {
-  padding: 30px 0;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 25px 0;
   margin-bottom: 40px;
 }
 
@@ -46,6 +39,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 15px; /* Prevents overlap */
 }
 
 .logo-title {
@@ -54,14 +48,15 @@ header {
   gap: 12px;
 }
 
-/* Smaller Logo */
 .logo {
   width: 22px; 
   height: 22px;
   color: var(--link);
+  flex-shrink: 0;
 }
 
-.nav-bar h1 { margin: 0; font-size: 1.6rem; font-weight: 700; }
+/* white-space: nowrap prevents the line breaks */
+.nav-bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; white-space: nowrap; }
 .nav-bar h1 a { color: #173626; text-decoration: none; }
 
 .nav-bar a { 
@@ -71,6 +66,7 @@ header {
   font-size: 0.95rem;
   font-weight: 500;
   transition: color 0.2s;
+  white-space: nowrap; /* Prevents "Submit Nomination" from breaking */
 }
 .nav-bar a:hover { color: var(--link); }
 
@@ -89,7 +85,6 @@ header {
 a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* Academic Table */
 .registry-controls {
   display: flex;
   justify-content: space-between;
@@ -138,7 +133,6 @@ a:hover { text-decoration: underline; }
 .type-replication { background: #eef6ec; color: #1e5c43; border: 1px solid #c2decb; }
 .type-reproduction { background: #f0f4f8; color: #2b4c7e; border: 1px solid #c5d5e6; }
 
-/* Discussion Accordion */
 .comment-icon {
   display: flex;
   align-items: center;
@@ -150,26 +144,9 @@ a:hover { text-decoration: underline; }
   padding: 4px 10px;
   border-radius: 16px;
   transition: 0.2s;
+  width: fit-content;
 }
 .comment-icon:hover { background: #e0e0e0; color: #333; }
-
-.discussion-row { display: none; background: #fcfcfc; }
-.discussion-row.active { display: table-row; }
-.discussion-content { padding: 20px 40px; border-left: 3px solid var(--accent); }
-
-.comment-box {
-  background: white;
-  padding: 15px;
-  border: 1px solid #eee;
-  border-radius: 6px;
-  margin-bottom: 10px;
-}
-.join-btn {
-  display: inline-block;
-  margin-top: 10px;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
 
 footer {
   margin-top: 60px;
