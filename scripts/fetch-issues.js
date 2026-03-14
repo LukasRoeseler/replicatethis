@@ -14,20 +14,15 @@ async function fetchIssues() {
     const res = await fetch(url, { headers });
     const issues = await res.json();
     const nominations = [];
-    const rawJournals = {};
-    const rawDisciplines = {};
 
     for (const issue of issues) {
       if (issue.pull_request) continue;
-
       const labels = issue.labels.map(l => l.name.toLowerCase());
-      if (!labels.includes('type: replication') && !labels.includes('type: reproduction')) {
-        continue;
-      }
+      if (!labels.includes('type: replication') && !labels.includes('type: reproduction')) continue;
 
       const parsed = parseIssueBody(issue.body);
       const repType = labels.includes('type: replication') ? 'Replication' : 'Reproduction';
-      const isClaimed = labels.includes('claimed'); // Check if claimed
+      const isClaimed = labels.includes('claimed');
       
       let discussion = [];
       if (issue.comments > 0) {
@@ -39,9 +34,6 @@ async function fetchIssues() {
           date: new Date(c.created_at).toLocaleDateString()
         }));
       }
-
-      if (parsed.Journal) rawJournals[parsed.Journal] = (rawJournals[parsed.Journal] || 0) + 1;
-      if (parsed.Discipline) rawDisciplines[parsed.Discipline] = (rawDisciplines[parsed.Discipline] || 0) + 1;
 
       nominations.push({
         id: issue.number,
@@ -59,13 +51,22 @@ async function fetchIssues() {
       });
     }
 
-    const sortLeaderboard = (obj) => Object.entries(obj)
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count);
+    // Helper to calculate leaderboards based on a subset of nominations
+    const calcBoard = (noms) => {
+      const j = {}, d = {}, u = {};
+      noms.forEach(n => {
+        if (n.Journal) j[n.Journal] = (j[n.Journal] || 0) + 1;
+        if (n.Discipline) d[n.Discipline] = (d[n.Discipline] || 0) + 1;
+        if (n.nominator) u[n.nominator] = (u[n.nominator] || 0) + 1;
+      });
+      const sortObj = (obj) => Object.entries(obj).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+      return { journals: sortObj(j), disciplines: sortObj(d), nominators: sortObj(u) };
+    };
 
     const leaderboards = {
-      journals: sortLeaderboard(rawJournals),
-      disciplines: sortLeaderboard(rawDisciplines)
+      all: calcBoard(nominations),
+      replication: calcBoard(nominations.filter(n => n.type === 'Replication')),
+      reproduction: calcBoard(nominations.filter(n => n.type === 'Reproduction'))
     };
 
     const dataDir = path.join(__dirname, '../src/_data');
