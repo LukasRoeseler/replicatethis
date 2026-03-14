@@ -1,1 +1,21 @@
+---
+layout: base.njk
+title: Browse Nominations
+---
+<h1>Browse Nominations</h1>
+<p>All approved papers requested for replication or reproduction.</p>
 
+<div class="nomination-list">
+  {% for nom in nominations | reverse %}
+  <div class="card">
+    <h2><a href="/nomination/{{ nom.id }}/">{{ nom.title }}</a></h2>
+    <p><strong>Authors:</strong> {{ nom.authors }}</p>
+    <p><strong>Journal:</strong> {{ nom.Journal }} | <strong>Discipline:</strong> {{ nom.Discipline }}</p>
+    <div class="tags">
+      {% for label in nom.labels %}
+        <span class="badge {{ label | replace(':', '') | replace(' ', '-') }}">{{ label }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
