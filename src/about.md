@@ -23,7 +23,6 @@ You can find a comprehensive, curated list of journals supporting replications a
 ---
 
 ## Partners
-We are proud to highlight initiatives and journals that actively share our mission to improve scientific reliability.
 
 <a href="https://www.uni-muenster.de/Ejournals/index.php/replicationresearch/index" target="_blank" class="partner-logo-container">
   <img src="https://www.uni-muenster.de/Ejournals/public/journals/36/pageHeaderLogoImage_en_US.png" alt="Replication Research Journal Logo" class="partner-logo">
