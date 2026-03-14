@@ -1,34 +1,20 @@
-
-<!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title | default("Replication Registry") }}</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <!-- The 'url' filter ensures the CSS loads on GitHub pages -->
+  <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>
 <body>
   <header>
     <div class="container nav-bar">
-      <h1><a href="/">Replication Registry</a></h1>
+      <h1><a href="{{ '/' | url }}">Replication Registry</a></h1>
       <nav>
-        <a href="/">Home</a>
-        <a href="/browse/">Browse</a>
-        <a href="/leaderboards/">Leaderboards</a>
-        <a href="/submit/">Submit</a>
-        <a href="/about/">About</a>
+        <a href="{{ '/' | url }}">Home</a>
+        <a href="{{ '/browse/' | url }}">Browse</a>
+        <a href="{{ '/leaderboards/' | url }}">Leaderboards</a>
+        <a href="{{ '/submit/' | url }}">Submit</a>
+        <a href="{{ '/about/' | url }}">About</a>
       </nav>
     </div>
   </header>
-  
-  <main class="container">
-    {{ content | safe }}
-  </main>
-
-  <footer>
-    <div class="container">
-      <p>Built with GitHub Issues & Actions. Open Source Scientific Infrastructure.</p>
-    </div>
-  </footer>
-</body>
-</html>
