@@ -1,20 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title | default("Replication Registry") }}</title>
-  <!-- The 'url' filter ensures the CSS loads on GitHub pages -->
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>
 <body>
   <header>
     <div class="container nav-bar">
-      <h1><a href="{{ '/' | url }}">Replication Registry</a></h1>
+      <div class="logo-title">
+        <!-- Circular Arrow Logo -->
+        <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        <h1><a href="{{ '/' | url }}">Replication Registry</a></h1>
+      </div>
       <nav>
         <a href="{{ '/' | url }}">Home</a>
         <a href="{{ '/browse/' | url }}">Browse</a>
         <a href="{{ '/leaderboards/' | url }}">Leaderboards</a>
-        <a href="{{ '/submit/' | url }}">Submit</a>
+        <!-- Links directly to your GitHub Issues -->
+        <a href="https://github.com/LukasRoeseler/replicatethis/issues" target="_blank" class="nav-submit">Submit</a>
         <a href="{{ '/about/' | url }}">About</a>
       </nav>
     </div>
   </header>
+  
+  <main class="container">
+    <!-- THIS LINE IS CRITICAL: It renders the text from your markdown pages -->
+    {{ content | safe }}
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Built with GitHub Issues & Actions. Open Source Scientific Infrastructure.</p>
+      <p><a href="https://github.com/LukasRoeseler/replicatethis" target="_blank">View repository on GitHub</a></p>
+    </div>
+  </footer>
+</body>
+</html>
