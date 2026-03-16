@@ -5,7 +5,7 @@ labels: ["status: pending"]
 body:
   - type: markdown
     attributes:
-      value: "🚨 **Important Note:** All posters must respect the Code of Conduct or their nomination will not be approved. [Please read the Code of Conduct here](https://lukasroeseler.github.io/replicatethis/coc/)."
+      value: "🚨 **Important Note:** All posters must respect the Code of Conduct or their nomination will not be approved. [Please read the Code of Conduct here](https://forrt.org/replicatethis/coc/)."
   - type: input
     id: doi
     attributes:
