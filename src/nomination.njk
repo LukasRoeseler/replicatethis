@@ -6,6 +6,15 @@ pagination:
   alias: nom
 permalink: "nomination/{{ nom.id }}/"
 ---
+
+{% set journalNames = {
+  "JCRe": "JCRe",
+  "JRR": "Journal of Robustness Research",
+  "R2": "Replication Research",
+  "RC": "Rescience C",
+  "RX": "Rescience X"
+} %}
+
 <a href="{{ '/browse/' | url }}" class="back-link" style="display:inline-block; margin-bottom: 20px;">&larr; Back to Browse</a>
 
 <h1 style="margin-top: 0;">{{ nom.title }}</h1>
@@ -18,9 +27,9 @@ permalink: "nomination/{{ nom.id }}/"
   <p><strong>Request Type:</strong> <span class="type-badge type-{{ nom.type | lower }}">{{ nom.type }}</span></p>
   
   {% if nom.targetJournals.length > 0 %}
-    <p><strong>Target Journals:</strong> 
+    <p style="margin-top: 10px;"><strong>Target Journals:</strong> 
       {% for journal in nom.targetJournals %}
-        <span class="journal-badge">{{ journal }}</span>
+        <span class="journal-badge" data-tooltip="{{ journalNames[journal] | default(journal) }}">{{ journal }}</span>
       {% endfor %}
     </p>
   {% endif %}
