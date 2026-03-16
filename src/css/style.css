@@ -279,3 +279,25 @@ button.nav-submit:hover { border-color: var(--gold); color: var(--gold); }
   .academic-table { min-width: 600px; }
   .filter-divider { display: none; }
 }
+
+/* --- PARTNER LOGOS --- */
+.partner-logo-container {
+  display: inline-block; 
+  padding: 15px 20px; 
+  border: 1px solid var(--border);
+  background: white; /* Keeps logo visible in dark mode */
+  border-radius: 8px;
+  margin-top: 10px; 
+  max-width: 200px; /* Made smaller */
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.partner-logo-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.partner-logo { 
+  width: 100%; 
+  height: auto; 
+  display: block; 
+}
