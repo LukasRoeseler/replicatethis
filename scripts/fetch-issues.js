@@ -1,14 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-// MAKE SURE THIS MATCHES YOUR EXACT FORRT REPO NAME
 const REPO = 'forrtproject/replicatethis'; 
 const TOKEN = process.env.GITHUB_TOKEN;
 
 async function fetchIssues() {
   console.log(`Fetching approved issues from ${REPO}...`);
   
-  // CHANGED: state=open (so closed/completed issues are ignored!)
   const url = `https://api.github.com/repos/${REPO}/issues?state=open&labels=status:%20approved`;
   const headers = { 'Accept': 'application/vnd.github.v3+json' };
   if (TOKEN) headers['Authorization'] = `token ${TOKEN}`;
@@ -26,6 +24,14 @@ async function fetchIssues() {
       const parsed = parseIssueBody(issue.body);
       const repType = labels.includes('type: replication') ? 'Replication' : 'Reproduction';
       const isClaimed = labels.includes('claimed');
+      
+      // Extract target journals (e.g., "journal: JCRe" -> "JCRe")
+      const targetJournals = [];
+      issue.labels.forEach(l => {
+        if (l.name.toLowerCase().startsWith('journal:')) {
+          targetJournals.push(l.name.split(':')[1].trim());
+        }
+      });
       
       let discussion = [];
       if (issue.comments > 0) {
@@ -46,6 +52,7 @@ async function fetchIssues() {
         formattedDate: new Date(issue.created_at).toLocaleDateString(),
         type: repType,
         isClaimed: isClaimed,
+        targetJournals: targetJournals,
         nominator: issue.user.login,
         commentCount: issue.comments,
         discussion: discussion,
