@@ -16,9 +16,16 @@ permalink: "nomination/{{ nom.id }}/"
   <p><strong>Journal:</strong> {{ nom.Journal }}</p>
   <p><strong>Discipline:</strong> {{ nom.Discipline }}</p>
   <p><strong>Request Type:</strong> <span class="type-badge type-{{ nom.type | lower }}">{{ nom.type }}</span></p>
+  
+  {% if nom.targetJournals.length > 0 %}
+    <p><strong>Target Journals:</strong> 
+      {% for journal in nom.targetJournals %}
+        <span class="journal-badge">{{ journal }}</span>
+      {% endfor %}
+    </p>
+  {% endif %}
 </div>
 
-<!-- Changed from h3 (Boxes) to h4 (Clean Underlines) for denser formatting -->
 <div style="margin-top: 40px;">
   <h4 class="serif" style="border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-bottom: 10px; color: var(--gold);">Scientific Justification</h4>
   <p style="white-space: pre-wrap; margin-bottom: 30px;">{{ nom['Scientific Justification'] }}</p>
@@ -39,7 +46,6 @@ permalink: "nomination/{{ nom.id }}/"
   {% endif %}
 </div>
 
-<!-- Comments Section -->
 <hr style="margin: 50px 0 30px 0; border: 0; border-top: 1px solid var(--border);">
 <h2 id="comments" class="serif">Comments</h2>
 
