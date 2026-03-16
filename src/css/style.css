@@ -101,12 +101,12 @@ h4, h5 { font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap; /* Forces PC to stay on one line */
-  overflow-x: auto; /* Allows horizontal scroll if screen is too small */
-  -webkit-overflow-scrolling: touch; /* Smooth scroll on mobile */
-  scrollbar-width: none; /* Hide scrollbar Firefox */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; 
 }
-.main-nav::-webkit-scrollbar { display: none; /* Hide scrollbar Webkit */ }
+.main-nav::-webkit-scrollbar { display: none; }
 
 .main-nav a, .dark-toggle {
   color: var(--text);
@@ -118,8 +118,8 @@ h4, h5 { font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
   padding: 15px 25px;
   transition: color 0.2s, background 0.2s;
   border-right: 1px solid var(--border);
-  white-space: nowrap; /* Prevents text inside buttons from breaking */
-  flex-shrink: 0; /* Prevents buttons from squishing */
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .main-nav a:first-child { border-left: 1px solid var(--border); }
@@ -174,13 +174,34 @@ a:hover { color: var(--text); }
 .academic-table td a { text-decoration: none; color: var(--text); font-weight: 600; font-size: 1.2rem;}
 .academic-table td a:hover { color: var(--gold); }
 
-/* Badges */
+/* Badges & Tooltips */
 .type-badge {
   font-size: 0.75rem; padding: 2px 8px; border: 1px solid var(--border);
   text-transform: uppercase; letter-spacing: 0.05em;
   color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 .type-claimed { border-color: var(--gold); color: var(--gold); font-weight: bold; }
+
+.academic-table th[title] {
+  text-decoration: underline dotted var(--text-muted);
+  text-underline-offset: 4px;
+}
+
+.journal-badge {
+  display: inline-block; font-size: 0.75rem; padding: 3px 8px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text); border-radius: 4px; margin-right: 5px; margin-bottom: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 600; letter-spacing: 0.05em;
+}
+
+.filter-group-title {
+  font-size: 0.85rem; color: var(--text-muted); margin-right: 15px; 
+  font-weight: bold; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+.filter-divider { height: 24px; width: 1px; background: var(--border); margin: 0 10px; }
 
 .comment-icon { display: flex; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none !important; }
 .comment-icon:hover { color: var(--gold); }
@@ -212,10 +233,10 @@ html.dark-mode .partner-logo-container:hover .partner-logo { filter: invert(1) h
 
 @media (max-width: 768px) {
   .site-title { font-size: 2.2rem; }
-  /* On mobile, align nav to the left so it's obvious you can swipe it */
   .main-nav { justify-content: flex-start; } 
   .main-nav a, .dark-toggle { padding: 12px 15px; }
-  .main-nav a:first-child { border-left: none; } /* Remove left border on mobile swipe for cleaner edge */
+  .main-nav a:first-child { border-left: none; }
   .table-responsive { width: 100%; overflow-x: auto; }
   .academic-table { min-width: 600px; }
+  .filter-divider { display: none; }
 }
