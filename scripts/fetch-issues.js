@@ -1,12 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-const REPO = 'forrtproject/replicatethis';
+// MAKE SURE THIS MATCHES YOUR EXACT FORRT REPO NAME
+const REPO = 'forrtproject/replicatethis'; 
 const TOKEN = process.env.GITHUB_TOKEN;
 
 async function fetchIssues() {
-  console.log("Fetching approved issues...");
-  const url = `https://api.github.com/repos/${REPO}/issues?state=all&labels=status:%20approved`;
+  console.log(`Fetching approved issues from ${REPO}...`);
+  
+  // CHANGED: state=open (so closed/completed issues are ignored!)
+  const url = `https://api.github.com/repos/${REPO}/issues?state=open&labels=status:%20approved`;
   const headers = { 'Accept': 'application/vnd.github.v3+json' };
   if (TOKEN) headers['Authorization'] = `token ${TOKEN}`;
 
@@ -51,7 +54,6 @@ async function fetchIssues() {
       });
     }
 
-    // Helper to calculate leaderboards based on a subset of nominations
     const calcBoard = (noms) => {
       const j = {}, d = {}, u = {};
       noms.forEach(n => {
