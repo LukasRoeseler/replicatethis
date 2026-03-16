@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const REPO = 'LukasRoeseler/replicatethis';
+const REPO = 'forrt/replicatethis';
 const TOKEN = process.env.GITHUB_TOKEN;
 
 async function fetchIssues() {
