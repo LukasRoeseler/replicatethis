@@ -28,7 +28,7 @@ title: Nominations Registry
       <label class="custom-checkbox"><input type="checkbox" id="check-replication" checked> Replication</label>
       <label class="custom-checkbox"><input type="checkbox" id="check-reproduction" checked> Reproduction</label>
       <label class="custom-checkbox"><input type="checkbox" id="check-claimed"> Exclude Claimed</label>
-      <label class="custom-checkbox"><input type="checkbox" id="check-collab"> <span style="color: #3b82f6;">🤝 Seeking Collaborators</span></label>
+      <label class="custom-checkbox"><input type="checkbox" id="check-collab"> <span style="color: #3b82f6; font-weight: bold;">Seeking Collaborators</span></label>
     </div>
 
     <div class="filter-divider"></div>
@@ -81,7 +81,7 @@ title: Nominations Registry
             <span class="type-badge type-claimed" style="margin-left: 5px;">CLAIMED ✍️</span>
           {% endif %}
           {% if nom.seekingCollab %}
-            <span class="type-badge type-collab" style="margin-left: 5px;">🤝 COLLAB NEEDED</span>
+            <span class="type-badge type-collab" style="margin-left: 5px;">COLLAB NEEDED</span>
           {% endif %}
           <br>
           <span style="font-size: 0.85rem; color: var(--text-muted);">{{ nom.Journal }} | {{ nom.Discipline }}</span>
