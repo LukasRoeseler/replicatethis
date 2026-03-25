@@ -1,71 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title | default("Replicate This") }}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
-  <script>
-    if (localStorage.getItem('theme') === 'dark') { document.documentElement.classList.add('dark-mode'); }
-  </script>
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-top">
-      <h1 class="site-title">
-        <a href="{{ '/' | url }}">
-          <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 2h7l4 4v4a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" />
-            <path d="M14 2v4h4" />
-            <line x1="3" y1="13" x2="21" y2="13" stroke-width="1" stroke-dasharray="3 3"/>
-            <path d="M7 24h7l4-4v-4a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1z" opacity="0.4"/>
-            <path d="M14 24v-4h4" opacity="0.4" />
-          </svg>
-          Replicate This
-        </a>
-      </h1>
-      <div class="sub-headline">A Community Registry for Scientific Verification</div>
-    </div>
-    
-    <div class="nav-wrapper">
-      <div class="container" style="padding: 0;">
-        <nav class="main-nav">
-          <a href="{{ '/' | url }}">Home</a>
-          <a href="{{ '/browse/' | url }}">Nominations</a>
-          <a href="{{ '/leaderboards/' | url }}">Leaderboards</a>
-          <a href="https://github.com/forrtproject/replicatethis/issues/new?template=nomination.yml" target="_blank" class="nav-nominate">Nominate</a>
-          <a href="{{ '/coc/' | url }}">COC</a>
-          <a href="{{ '/about/' | url }}">About</a>
-          <button id="darkModeToggle" class="dark-toggle" aria-label="Toggle Dark Mode">
-            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-          </button>
-        </nav>
-      </div>
-    </div>
-  </header>
+---
+layout: base.njk
+pagination:
+  data: nominations
+  size: 1
+  alias: nom
+permalink: "nomination/{{ nom.id }}/"
+---
+
+{% set journalNames = {
+  "JCRe": "JCRe",
+  "JRR": "Journal of Robustness Research",
+  "R2": "Replication Research",
+  "RC": "Rescience C",
+  "RX": "Rescience X"
+} %}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <a href="{{ '/browse/' | url }}" class="back-link">&larr; Back to Browse</a>
+  <a href="{{ nom.url }}" target="_blank" class="upvote-btn" data-tooltip="Login to GitHub to vote">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+    Upvote ({{ nom.upvotes }})
+  </a>
+</div>
+
+<h1 style="margin-top: 0;">{{ nom.title }}</h1>
+
+{% if nom.seekingCollab %}
+<div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0;">
+  <strong style="color: #3b82f6; font-family: sans-serif; font-size: 0.9rem; text-transform: uppercase;">🤝 Collaborators Needed</strong>
+  <p style="margin: 5px 0 0 0; font-size: 0.95rem;">A researcher is actively looking for collaborators to execute this {{ nom.type | lower }}. <a href="{{ nom.url }}" target="_blank" style="color: #3b82f6;">Join the discussion on GitHub &rarr;</a></p>
+</div>
+{% endif %}
+
+<div class="meta-box" style="border-top: 3px solid var(--gold);">
+  <p><strong>Nominated by:</strong> <a href="https://github.com/{{ nom.nominator }}" target="_blank">@{{ nom.nominator }}</a></p>
+  <p><strong>DOI:</strong> <a href="https://doi.org/{{ nom.DOI }}" target="_blank">{{ nom.DOI }}</a></p>
+  <p><strong>Journal:</strong> {{ nom.Journal }}</p>
+  <p><strong>Discipline:</strong> {{ nom.Discipline }}</p>
+  <p><strong>Request Type:</strong> <span class="type-badge type-{{ nom.type | lower }}">{{ nom.type }}</span></p>
   
-  <main class="container">
-    {{ content | safe }}
-  </main>
+  {% if nom.targetJournals.length > 0 %}
+    <p style="margin-top: 10px;"><strong>Target Journals:</strong> 
+      {% for journal in nom.targetJournals %}
+        <span class="journal-badge" data-tooltip="{{ journalNames[journal] | default(journal) }}">{{ journal }}</span>
+      {% endfor %}
+    </p>
+  {% endif %}
+</div>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>This is a prototype project developed by Lukas Röseler with Gemini 3.1 Pro Preview.</p>
-      <p><a href="https://github.com/forrtproject/replicatethis" target="_blank">View repository on GitHub</a></p>
-    </div>
-  </footer>
+<div style="margin-top: 40px;">
+  <h4 class="serif" style="border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-bottom: 10px; color: var(--gold);">Scientific Justification</h4>
+  <p style="white-space: pre-wrap; margin-bottom: 30px;">{{ nom['Scientific Justification'] }}</p>
 
-  <script>
-    const toggle = document.getElementById('darkModeToggle');
-    const doc = document.documentElement;
-    toggle.addEventListener('click', () => {
-      doc.classList.toggle('dark-mode');
-      localStorage.setItem('theme', doc.classList.contains('dark-mode') ? 'dark' : 'light');
-    });
-  </script>
-</body>
-</html>
+  {% if nom['Data Location (if Reproduction)'] %}
+  <h4 class="serif" style="border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-bottom: 10px; color: var(--gold);">Data Location</h4>
+  <p style="white-space: pre-wrap; margin-bottom: 30px;">{{ nom['Data Location (if Reproduction)'] }}</p>
+  {% endif %}
+
+  {% if nom['Suggested Robustness Checks'] %}
+  <h4 class="serif" style="border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-bottom: 10px; color: var(--gold);">Suggested Robustness Checks</h4>
+  <p style="white-space: pre-wrap; margin-bottom: 30px;">{{ nom['Suggested Robustness Checks'] }}</p>
+  {% endif %}
+
+  {% if nom['Suggested Deviations from Original Design'] %}
+  <h4 class="serif" style="border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-bottom: 10px; color: var(--gold);">Suggested Deviations</h4>
+  <p style="white-space: pre-wrap; margin-bottom: 30px;">{{ nom['Suggested Deviations from Original Design'] }}</p>
+  {% endif %}
+</div>
+
+<hr style="margin: 50px 0 30px 0; border: 0; border-top: 1px solid var(--border);">
+<h2 id="comments" class="serif">Comments</h2>
+
+{% if nom.commentCount == 0 %}
+  <p style="color: var(--text-muted); margin-bottom: 20px;">No comments yet on this nomination.</p>
+{% else %}
+  <div style="margin-bottom: 30px;">
+    {% for comment in nom.discussion %}
+      <div style="background: var(--bg); padding: 20px; border: 1px solid var(--border); border-radius: 0px; margin-bottom: 15px;">
+        <strong style="color: var(--gold);">@{{ comment.author }}</strong> 
+        <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: 10px;">{{ comment.date }}</span>
+        <div style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">{{ comment.body }}</div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<a href="{{ nom.url }}" target="_blank" class="nav-submit" style="display: inline-block; font-size: 1rem;">Join discussion on GitHub &rarr;</a>
