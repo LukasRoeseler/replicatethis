@@ -17,18 +17,32 @@ permalink: "nomination/{{ nom.id }}/"
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
   <a href="{{ '/browse/' | url }}" class="back-link">&larr; Back to Browse</a>
-  <a href="{{ nom.url }}" target="_blank" class="upvote-btn" data-tooltip="Login to GitHub and react with 👍 to endorse">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
-    Endorse ({{ nom.upvotes }})
-  </a>
 </div>
 
 <h1 style="margin-top: 0;">{{ nom.title }}</h1>
 
+<!-- Interaction Mechanics Box -->
+<div style="background: var(--table-hover); border: 1px solid var(--border); padding: 15px 25px; margin-bottom: 25px; border-radius: 6px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between;">
+  <div>
+    <h4 style="margin: 0 0 5px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.95rem; text-transform: uppercase;">Community Mechanics</h4>
+    <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+      Login to GitHub and react to the original post to record your vote: <br>
+      <strong>👍 Endorse</strong> | <strong>🎉 Predict Success</strong> | <strong>😕 Predict Failure</strong>
+    </p>
+  </div>
+  
+  <div style="display: flex; gap: 10px;">
+    <span class="journal-badge" style="font-size: 0.9rem; padding: 5px 10px;">👍 {{ nom.upvotes }}</span>
+    <span class="journal-badge" style="font-size: 0.9rem; padding: 5px 10px;">🎉 {{ nom.predictSuccess }}</span>
+    <span class="journal-badge" style="font-size: 0.9rem; padding: 5px 10px;">😕 {{ nom.predictFailure }}</span>
+    <a href="{{ nom.url }}" target="_blank" class="upvote-btn" style="margin-left: 10px;">Vote &rarr;</a>
+  </div>
+</div>
+
 {% if nom.seekingCollab %}
-<div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0;">
-  <strong style="color: #3b82f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.9rem; text-transform: uppercase;">🤝 Collaborators Needed</strong>
-  <p style="margin: 5px 0 0 0; font-size: 0.95rem;">A researcher is actively looking for collaborators to execute this {{ nom.type | lower }}. <a href="{{ nom.url }}" target="_blank" style="color: #3b82f6;">Join the discussion on GitHub &rarr;</a></p>
+<div style="background: rgba(59, 130, 246, 0.05); border-left: 4px solid #3b82f6; padding: 15px 20px; margin-bottom: 25px; border-radius: 0 4px 4px 0;">
+  <strong style="color: #3b82f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.9rem; text-transform: uppercase;">Collaborators Needed</strong>
+  <p style="margin: 5px 0 0 0; font-size: 0.95rem;">A researcher is actively looking for collaborators to execute this {{ nom.type | lower }}. <a href="{{ nom.url }}" target="_blank" style="color: #3b82f6; text-decoration: underline; text-underline-offset: 3px;">Join the discussion on GitHub &rarr;</a></p>
 </div>
 {% endif %}
 
