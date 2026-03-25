@@ -8,7 +8,8 @@ async function fetchIssues() {
   console.log(`Fetching approved issues from ${REPO}...`);
   
   const url = `https://api.github.com/repos/${REPO}/issues?state=open&labels=status:%20approved`;
-  const headers = { 'Accept': 'application/vnd.github.v3+json' };
+  // The squirrel-girl header is REQUIRED to fetch reactions properly from the list API
+  const headers = { 'Accept': 'application/vnd.github.squirrel-girl-preview+json' };
   if (TOKEN) headers['Authorization'] = `token ${TOKEN}`;
 
   try {
@@ -24,8 +25,12 @@ async function fetchIssues() {
       const parsed = parseIssueBody(issue.body);
       const repType = labels.includes('type: replication') ? 'Replication' : 'Reproduction';
       const isClaimed = labels.includes('claimed');
-      const seekingCollab = labels.includes('seeking collaborators'); // New Collaborator flag
-      const upvotes = issue.reactions ? issue.reactions['+1'] : 0; // Fetch GitHub Thumbs Up
+      const seekingCollab = labels.includes('seeking collaborators');
+      
+      // Fetching specific GitHub reactions for mechanics
+      const upvotes = issue.reactions ? issue.reactions['+1'] : 0; // Endorsements
+      const predictSuccess = issue.reactions ? issue.reactions['hooray'] : 0; // 🎉
+      const predictFailure = issue.reactions ? issue.reactions['confused'] : 0; // 😕
       
       const targetJournals = [];
       issue.labels.forEach(l => {
@@ -55,6 +60,8 @@ async function fetchIssues() {
         isClaimed: isClaimed,
         seekingCollab: seekingCollab,
         upvotes: upvotes,
+        predictSuccess: predictSuccess,
+        predictFailure: predictFailure,
         targetJournals: targetJournals,
         nominator: issue.user.login,
         commentCount: issue.comments,
